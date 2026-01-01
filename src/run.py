@@ -12,6 +12,10 @@ from typing import Dict, Union, Tuple
 from fastapi.routing import APIRoute
 from typing import TYPE_CHECKING
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 # This block is only processed by type checkers like Pylance
 if TYPE_CHECKING:
     from multiprocessing.synchronize import Event as MultiprocessingEvent
