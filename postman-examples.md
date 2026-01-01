@@ -478,7 +478,91 @@ Tạo **session mới** cho mỗi request. Thích hợp cho các câu hỏi đ�
 
 ---
 
+### 2.6. Gửi Hình Ảnh với /gemini (Vision)
+
+#### 2.6.1. Hình Ảnh từ URL
+
+**Body:**
+```json
+{
+  "message": "Mô tả chi tiết hình ảnh này",
+  "model": "gemini-3.0-pro",
+  "files": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+  ]
+}
+```
+
+**Ví dụ curl:**
+```bash
+curl -X POST http://localhost:6969/gemini \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "What is in this image?",
+    "model": "gemini-2.5-pro",
+    "files": ["https://example.com/photo.jpg"]
+  }'
+```
+
+---
+
+#### 2.6.2. Hình Ảnh Base64
+
+**Body:**
+```json
+{
+  "message": "Đọc text trong hình này",
+  "model": "gemini-2.5-pro",
+  "files": [
+    "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+  ]
+}
+```
+
+---
+
+#### 2.6.3. Local File Paths
+
+**Body:**
+```json
+{
+  "message": "Mô tả chi tiết hình ảnh này",
+  "model": "gemini-3.0-pro",
+  "files": [
+    "/path/to/image1.jpg",
+    "/path/to/image2.png"
+  ]
+}
+```
+
+---
+
+#### 2.6.4. Mix Multiple Formats
+
+**Body:**
+```json
+{
+  "message": "So sánh các hình ảnh này",
+  "model": "gemini-3.0-pro",
+  "files": [
+    "https://example.com/image1.jpg",
+    "/tmp/local_image.jpg",
+    "data:image/png;base64,iVBORw0KGg..."
+  ]
+}
+```
+
+**Lưu ý:** 
+- ✅ Hỗ trợ **URL** (http/https)
+- ✅ Hỗ trợ **Base64** (data:image/...)
+- ✅ Hỗ trợ **Local paths**
+- ✅ Có thể **mix nhiều formats** trong một request
+
+
+---
+
 ## 3. /gemini-chat
+
 
 Duy trì **session liên tục**. Thích hợp cho cuộc hội thoại nhiều lượt.
 
@@ -584,7 +668,88 @@ Duy trì **session liên tục**. Thích hợp cho cuộc hội thoại nhiều 
 
 ---
 
+### 3.6. Gửi Hình Ảnh với /gemini-chat (Vision + Persistent Session)
+
+#### 3.6.1. Với URL
+
+**Request 1 - Gửi hình từ URL:**
+```json
+{
+  "message": "Phân tích hình ảnh này",
+  "model": "gemini-2.5-pro",
+  "files": ["https://example.com/document.jpg"]
+}
+```
+
+**Request 2 - Hỏi tiếp (không cần gửi lại files):**
+```json
+{
+  "message": "Trích xuất toàn bộ text trong hình đó dạng markdown",
+  "model": "gemini-2.5-pro"
+}
+```
+
+**Request 3 - Tiếp tục hỏi:**
+```json
+{
+  "message": "Tóm tắt nội dung đó thành 3 bullet points",
+  "model": "gemini-2.5-pro"
+}
+```
+
+---
+
+#### 3.6.2. Với Base64
+
+**Request 1:**
+```json
+{
+  "message": "Có gì trong hình này?",
+  "model": "gemini-2.5-flash",
+  "files": ["data:image/jpeg;base64,/9j/4AAQSkZJRg..."]
+}
+```
+
+**Request 2:**
+```json
+{
+  "message": "Màu sắc chủ đạo là gì?",
+  "model": "gemini-2.5-flash"
+}
+```
+
+---
+
+#### 3.6.3. Với Local Path
+
+**Request 1:**
+```json
+{
+  "message": "Phân tích hình ảnh này và cho tôi biết nội dung chính",
+  "model": "gemini-2.5-pro",
+  "files": ["/tmp/document.jpg"]
+}
+```
+
+**Request 2:**
+```json
+{
+  "message": "Đọc text trong hình",
+  "model": "gemini-2.5-pro"
+}
+```
+
+**Lưu ý:**
+- ✅ Hỗ trợ **URL, Base64, và Local paths**
+- ✅ Session được **duy trì** giữa các requests
+- ✅ Hình ảnh được **nhớ** trong context của session
+- ✅ Không cần gửi lại `files` ở các request tiếp theo
+
+
+---
+
 ## 4. /translate
+
 
 Endpoint để dịch thuật. Duy trì session như `/gemini-chat`.
 
