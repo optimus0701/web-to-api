@@ -1,0 +1,29 @@
+# docker-compose.yml
+
+# This file is for production mode only.
+
+services:
+  web_ai:
+    build: .
+    image: optimus0701/web_ai_server:latest
+    container_name: web_ai_server
+    restart: always
+    ports:
+      - "6969:6969"
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app/src
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      # Gemini cookies - override via .env file
+      - GEMINI_COOKIE_1PSID=${GEMINI_COOKIE_1PSID:-}
+      - GEMINI_COOKIE_1PSIDTS=${GEMINI_COOKIE_1PSIDTS:-}
+      # Browser name for auto-cookie retrieval
+      - BROWSER_NAME=${BROWSER_NAME:-chrome}
+      # Proxy settings
+      - HTTP_PROXY=${HTTP_PROXY:-}
+      - HTTPS_PROXY=${HTTPS_PROXY:-}
+    command: >
+      sh -c "
+        uvicorn app.main:app --host 0.0.0.0 --port 6969 --workers 4 --log-level info;
+      "
