@@ -235,7 +235,176 @@ Content-Type: application/json
 
 ---
 
+### 1.8. Gửi Hình Ảnh với Vision (OpenAI Format)
+
+**Method:** `POST`  
+**URL:** `http://localhost:6969/v1/chat/completions`
+
+#### 1.8.1. Hình Ảnh từ URL
+
+**Body:**
+```json
+{
+  "model": "gemini-3.0-pro",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Mô tả chi tiết hình ảnh này"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/image.jpg"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 1.8.2. Hình Ảnh Base64
+
+**Body:**
+```json
+{
+  "model": "gemini-2.5-pro",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Có gì trong hình này?"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 1.8.3. Nhiều Hình Ảnh
+
+**Body:**
+```json
+{
+  "model": "gemini-3.0-pro",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "So sánh 2 hình ảnh này"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/image1.jpg"
+          }
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/image2.jpg"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 1.8.4. Hình Ảnh với Conversation History
+
+**Body:**
+```json
+{
+  "model": "gemini-2.5-pro",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Bạn là chuyên gia phân tích hình ảnh."
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Phân tích hình này"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/chart.png"
+          }
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "Đây là một biểu đồ thống kê..."
+    },
+    {
+      "role": "user",
+      "content": "Cho tôi thêm chi tiết về phần màu xanh"
+    }
+  ]
+}
+```
+
+---
+
+#### 1.8.5. Hình Ảnh Local File Path
+
+**Body:**
+```json
+{
+  "model": "gemini-2.5-flash",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Đọc text từ hình này"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "/path/to/local/image.jpg"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Lưu ý:** 
+- Hỗ trợ cả URL, base64, và local file paths
+- Có thể gửi nhiều hình ảnh trong một request
+- Format tương thích 100% với OpenAI Vision API
+
+---
+
 ## 2. /gemini
+
 
 Tạo **session mới** cho mỗi request. Thích hợp cho các câu hỏi độc lập.
 
